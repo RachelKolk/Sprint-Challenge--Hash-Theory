@@ -10,7 +10,23 @@ char **reconstruct_trip(Ticket **tickets, int length)
   char **route = malloc(length * sizeof(char *));
 
   /* YOUR CODE HERE */
-
+  // using the insert function we'll put the tickets into the hash table
+  // we'll use the ticket source as the key and the ticket destination as the value
+  for (int i = 0; i < length; i++) {
+    hash_table_insert(ht, tickets[i]->source, tickets[i]->destination);
+  }
+  // per the instructions we'll start our trip with a source of NONE
+  // using the retrieve function we'll find that ticket to start with
+  // and assign it to the first position in our route
+  route[0] = hash_table_retrieve(ht, "NONE");
+  // then we'll loop through our route starting at the second index
+  for (int i = 1; i < length; i++) {
+    // setting the route index by using the destination of the previous ticket (i-1)
+    // and the retrieve function to find it
+    route[i] = hash_table_retrieve(ht, route[i-1]);
+  }
+  // to not have memory leaks we use the destroy function to kill the hash table
+  //destroy_hash_table(ht);
   return route;
 }
 
